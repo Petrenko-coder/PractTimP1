@@ -1,41 +1,35 @@
-       #include "modAlphaCipher.h"
-       modAlphaCipher::modAlphaCipher(const wstring& skey)
-       {
-           for (unsigned i=0; i<numAlpha.size(); i++) {
-               alphaNum[numAlpha[i]]=i;
-           }
-           key = convert(skey);
-       }
-       wstring modAlphaCipher::encrypt(const wstring& open_text)
-       {
-           vector<int> work = convert(open_text);
-           for(unsigned i=0; i < work.size(); i++) {
-               work[i] = (work[i] + key[i % key.size()]) % alphaNum.size();
-           }
-           return convert(work);
-       }
-       wstring modAlphaCipher::decrypt(const wstring& cipher_text)
-       {
-           vector<int> work = convert(cipher_text);
-           for(unsigned i=0; i < work.size(); i++) {
-               work[i] = (work[i] + alphaNum.size() - key[i % key.size()]) % 
-       alphaNum.size();
-           }
-           return convert(work);
-       }
-       inline vector<int> modAlphaCipher::convert(const wstring& s)
-       {
-          vector<int> result;
-          for(auto c:s) {
-              result.push_back(alphaNum[c]);
-         }
-         return result;
-       }
-       inline wstring modAlphaCipher::convert(const vector<int>& v)
-       {
-          wstring result;
-          for(auto i:v) {
-              result.push_back(numAlpha[i]);
-          }
-          return result;
-       }
+   #include <iostream>
+#include <locale>
+#include "/home/student/my_cplusplus_programs/Labtimp/Labtimp1/Zadanie1/program1/modAlphaCipher.h"
+
+using namespace std;
+
+void check(const wstring& text, const wstring& key)
+{
+    wstring cipherText;
+    wstring decryptedText;
+    modAlphaCipher cipher(key);
+    
+    cipherText = cipher.encrypt(text);
+    decryptedText = cipher.decrypt(cipherText);
+    
+    wcout << L"key = " << key << endl;
+    wcout << text << endl;
+    wcout << cipherText << endl;
+    wcout << decryptedText << endl;
+    
+    if (text == decryptedText)
+        wcout << L"ok\n";
+    else
+        wcout << L"err\n";
+}
+
+int main(int argc, char **argv)
+{
+    locale loc("ru_RU.UTF-8");
+    locale::global(loc);
+    
+    check(L"СТАРОСТА", L"КИТ");
+    
+    return 0;
+}
